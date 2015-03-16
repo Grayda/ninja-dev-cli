@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# ensure we're running in the arm chroot
+if [[ $(arch) != "armv7l" ]]; then
+	cp /etc/resolv.conf /armhf/etc/resolv.conf
+	cp -R /scripts /armhf/scripts
+	exec /usr/sbin/chroot /armhf /scripts/go-patch-qemu
+fi
+
+apt-get update
+apt-get install -y build-essential
+sed -i 's/NSIG = 65/NSIG = 64/g' /usr/local/go/src/runtime/os_linux.h
+cd /usr/local/go/src
+./make.bash
