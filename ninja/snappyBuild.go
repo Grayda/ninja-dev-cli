@@ -87,8 +87,29 @@ func buildSnappyPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
 		stagingShimFile := filepath.Join(stagingCurr, "ninja-shim")
 		ioutil.WriteFile(stagingShimFile, []byte(ninjaLaunchShim), 0755)
 
+		// and all the files specified
+		for _, fn := range pkg.PathsToCopy() {
+			srcPath := filepath.Join(pkg.BasePath, fn)
+			dstPath := filepath.Join(stagingCurr, fn)
+			copyAnything(srcPath, dstPath)
+		}
+
 		runNativeDockerCommand(ctx.dockerVolumeArgs, "sh", "-c", "cd "+ctx.outputDocker+"; snappy build "+dockerCurr+"")
 	} else {
 		panic("Multi-arch snaps not supported yet, FIXME add shim wrapper here")
+	}
+}
+
+func copyAnything(from string, to string) error {
+	fromStat, err := os.Stat(from)
+	if err != nil {
+		return err
+	}
+
+	if fromStat.IsDir() {
+		return shutil.CopyTree(from, to, nil)
+	} else {
+		_, err = shutil.Copy(from, to, true)
+		return err
 	}
 }

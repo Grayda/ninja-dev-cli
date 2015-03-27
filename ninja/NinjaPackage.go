@@ -9,10 +9,11 @@ import (
 )
 
 type packageJson struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Version     string `json:"version"`
-	Author      string `json:"author"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Version     string   `json:"version"`
+	Author      string   `json:"author"`
+	Files       []string `json:"files"`
 }
 
 type NinjaPackage struct {
@@ -66,4 +67,8 @@ func (pkg *NinjaPackage) Author() string {
 
 func (pkg *NinjaPackage) Description() string {
 	return pkg.info.Description
+}
+
+func (pkg *NinjaPackage) PathsToCopy() []string {
+	return pkg.info.Files
 }
