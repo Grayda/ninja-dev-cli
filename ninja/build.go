@@ -44,9 +44,9 @@ func doBuild(arguments map[string]interface{}) {
 	// Perform Intel magic
 	cmdIntel := []string{
 		"/bin/bash", "-c",
-		"GOPATH=" + fullPath + "/.gopath-climagic:$GOPATH; (" +
+		"GOPATH=" + fullPath + "/.gopath-cli:$GOPATH; (" +
 			"go get -d ninja-dev-cli/" + pkg.ShortName() + ";" +
-			"go build -o " + fullPath + "/.gopath-climagic/autoclibinary-amd64 ninja-dev-cli/" + pkg.ShortName() + ";" +
+			"go build -o " + fullPath + "/.gopath-cli/autoclibinary-amd64 ninja-dev-cli/" + pkg.ShortName() + ";" +
 			")",
 	}
 
@@ -62,9 +62,9 @@ func doBuild(arguments map[string]interface{}) {
 			"CGO_ENABLED=1 GOARCH=arm GOARM=7 " +
 			"PKG_CONFIG_LIBDIR=/usr/lib/arm-linux-gnueabihf/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig " +
 			"CC=arm-linux-gnueabihf-gcc " +
-			"GOPATH=" + fullPath + "/.gopath-climagic:$GOPATH " +
+			"GOPATH=" + fullPath + "/.gopath-cli:$GOPATH " +
 			"go build -ldflags '-extld=arm-linux-gnueabihf-gcc' " +
-			"-o " + fullPath + "/.gopath-climagic/autoclibinary-armhf ninja-dev-cli/" + pkg.ShortName() + ";" +
+			"-o " + fullPath + "/.gopath-cli/autoclibinary-armhf ninja-dev-cli/" + pkg.ShortName() + ";" +
 			")",
 	}
 
@@ -78,8 +78,8 @@ func doBuild(arguments map[string]interface{}) {
 	context := &buildContext{}
 
 	context.archBinaries = map[string]string{}
-	context.archBinaries["amd64"] = filepath.Join(pkg.BasePath, ".gopath-climagic/autoclibinary-amd64")
-	context.archBinaries["armhf"] = filepath.Join(pkg.BasePath, ".gopath-climagic/autoclibinary-armhf")
+	context.archBinaries["amd64"] = filepath.Join(pkg.BasePath, ".gopath-cli/autoclibinary-amd64")
+	context.archBinaries["armhf"] = filepath.Join(pkg.BasePath, ".gopath-cli/autoclibinary-armhf")
 
 	context.stagingHost = filepath.Join(pkg.BasePath, ".staging-cli")
 	context.stagingDocker = filepath.Join(fullPath, ".staging-cli")
