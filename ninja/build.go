@@ -101,7 +101,7 @@ func doBuild(arguments map[string]interface{}) {
 		color.Printf("@mCreating Snappy package for architecture: %v\n", arch)
 		buildSnappyPackage(pkg, context, arch)
 
-		color.Printf("@mCreating Debian package for architecture: %v\n", arch)
-		buildDebianPackage(pkg, context, arch)
+		// color.Printf("@mCreating Debian package for architecture: %v\n", arch)
+		// buildDebianPackage(pkg, context, arch)
 	}
 }

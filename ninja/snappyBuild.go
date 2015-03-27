@@ -37,9 +37,14 @@ func buildSnappyPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
 	os.MkdirAll(metaCurr, 0750)
 
 	if arch != "multi" {
+		// binary itself
 		binCurr := filepath.Join(stagingCurr, pkg.ShortName())
+		shutil.Copy(ctx.archBinaries[arch], binCurr, false)
 
-		shutil.CopyFile(ctx.archBinaries[arch], binCurr, false)
+		// package.json
+		srcFile := filepath.Join(pkg.BasePath, "package.json")
+		pkgCurr := filepath.Join(stagingCurr, "package.json")
+		shutil.Copy(srcFile, pkgCurr, true) // don't copy symlink itself, just the real file
 
 		meta := &snappyPackageMeta{
 			Name:         pkg.ShortName(),
@@ -51,7 +56,12 @@ func buildSnappyPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
 				{
 					Name:        pkg.ShortName(),
 					Description: pkg.ShortName() + " service",
-					Start:       pkg.ShortName(),
+					Start:       "ninja-shim ./" + pkg.ShortName(),
+				},
+			},
+			Integration: map[string]snappyPackageMetaIntegration{
+				pkg.ShortName(): snappyPackageMetaIntegration{
+					AppArmorProfile: "meta/" + pkg.ShortName() + ".profile",
 				},
 			},
 		}
@@ -61,11 +71,21 @@ func buildSnappyPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
 			panic(err) // FIXME: meh
 		}
 
+		// meta/package.yaml
 		metaPackageFile := filepath.Join(metaCurr, "package.yaml")
 		ioutil.WriteFile(metaPackageFile, metaBytes, 0644)
 
+		// meta/readme.md
 		metaReadmeFile := filepath.Join(metaCurr, "readme.md")
 		ioutil.WriteFile(metaReadmeFile, []byte(pkg.Description()), 0644)
+
+		// meta/<pkg-name>.profile
+		metaProfileFile := filepath.Join(metaCurr, pkg.ShortName()+".profile")
+		ioutil.WriteFile(metaProfileFile, []byte(ninjaAppProfileRediculouslyPermissive), 0644)
+
+		// ninja-shim
+		stagingShimFile := filepath.Join(stagingCurr, "ninja-shim")
+		ioutil.WriteFile(stagingShimFile, []byte(ninjaLaunchShim), 0755)
 
 		runNativeDockerCommand(ctx.dockerVolumeArgs, "sh", "-c", "cd "+ctx.outputDocker+"; snappy build "+dockerCurr+"")
 	} else {
