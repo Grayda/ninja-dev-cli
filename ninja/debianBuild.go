@@ -33,7 +33,7 @@ func buildDebianPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
 
 	// package.json
 	srcFile := filepath.Join(pkg.BasePath, "package.json")
-	pkgCurr := filepath.Join(stagingCurr, "package.json")
+	pkgCurr := filepath.Join(targetPath, "package.json")
 	shutil.Copy(srcFile, pkgCurr, true) // don't copy symlink itself, just the real file
 
 	tplData := &upstartTemplateVars{
