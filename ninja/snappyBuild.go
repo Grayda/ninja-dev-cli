@@ -24,6 +24,7 @@ type snappyPackageMeta struct {
 	Architecture string
 	Version      string
 	Icon         string
+	Frameworks   string
 	Services     []snappyPackageMetaService
 	Integration  map[string]snappyPackageMetaIntegration `yaml:"integration,omitempty"`
 }
@@ -52,6 +53,7 @@ func buildSnappyPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
 			Architecture: arch,
 			Version:      pkg.Version(),
 			Icon:         "meta/null.svg",
+			Frameworks:   "ninjasphere",
 			Services: []snappyPackageMetaService{
 				{
 					Name:        pkg.ShortName(),
