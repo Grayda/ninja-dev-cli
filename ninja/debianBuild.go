@@ -77,7 +77,7 @@ func buildDebianPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
 		"--description", pkg.Name(),
 		"-C", dockerCurr,
 		"-a", arch,
-		"-d", "ninjasphere",
+		"-d", "ninjasphere-minimal",
 		"-p", filepath.Join(ctx.outputDocker, fmt.Sprintf("%s_%s_%s.deb", pkg.ShortName(), pkg.Version(), arch)),
 		"--after-install", filepath.Join(ctx.stagingDocker, "postinstall-deb-"+arch),
 		".",
