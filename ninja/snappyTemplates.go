@@ -5,6 +5,9 @@ const ninjaLaunchShim = `#!/bin/bash
 export sphere_installDirectory=/apps/ninjasphere/current
 export PATH=/apps/ninjasphere/current/bin/:$SNAPP_APP_PATH/bin:$PATH
 
+export NINJA_APP_PATH=$SNAPP_APP_PATH
+export NINJA_APP_DATA_PATH=$SNAPP_APP_DATA_PATH
+
 exec "$@"`
 
 const ninjaAppProfileRediculouslyPermissive = `# vim:syntax=apparmor
