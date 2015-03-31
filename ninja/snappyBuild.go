@@ -29,13 +29,18 @@ type snappyPackageMeta struct {
 	Integration  map[string]snappyPackageMetaIntegration `yaml:"integration,omitempty"`
 }
 
-func buildSnappyPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
+func buildSnappyPackage(pkg *NinjaPackage, ctx *buildContext, arch string, arguments map[string]interface{}) {
 	dockerCurr := filepath.Join(ctx.stagingDocker, "snappy-"+arch)
 	stagingCurr := filepath.Join(ctx.stagingHost, "snappy-"+arch)
 	os.MkdirAll(stagingCurr, 0750)
 
 	metaCurr := filepath.Join(stagingCurr, "meta")
 	os.MkdirAll(metaCurr, 0750)
+
+	pkgSuffix := ""
+	if ns := arguments["--snappy-namespace"]; ns != nil {
+		pkgSuffix = "." + ns.(string)
+	}
 
 	if arch != "multi" {
 		// binary itself
@@ -48,7 +53,7 @@ func buildSnappyPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
 		shutil.Copy(srcFile, pkgCurr, true) // don't copy symlink itself, just the real file
 
 		meta := &snappyPackageMeta{
-			Name:         pkg.ShortName(),
+			Name:         pkg.ShortName() + pkgSuffix,
 			Vendor:       pkg.Author(),
 			Architecture: arch,
 			Version:      pkg.Version(),

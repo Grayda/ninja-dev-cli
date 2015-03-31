@@ -99,7 +99,7 @@ func doBuild(arguments map[string]interface{}) {
 	// build for all archs for now
 	for _, arch := range []string{"amd64", "armhf"} {
 		color.Printf("@mCreating Snappy package for architecture: %v\n", arch)
-		buildSnappyPackage(pkg, context, arch)
+		buildSnappyPackage(pkg, context, arch, arguments)
 	}
 
 	color.Printf("@mCreating Debian package for architecture: %v\n", "armhf")
