@@ -67,7 +67,7 @@ func buildSnappyPackage(pkg *NinjaPackage, ctx *buildContext, arch string, argum
 				},
 			},
 			Integration: map[string]snappyPackageMetaIntegration{
-				pkg.ShortName(): snappyPackageMetaIntegration{
+				pkg.ShortName(): {
 					AppArmorProfile: "meta/" + pkg.ShortName() + ".profile",
 				},
 			},
