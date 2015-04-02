@@ -20,6 +20,7 @@ type buildContext struct {
 }
 
 func doBuild(arguments map[string]interface{}) {
+	verbose = arguments["verbose"].(bool)
 	path := arguments["<path>"].(string)
 
 	pkg, err := NewNinjaPackage(path)

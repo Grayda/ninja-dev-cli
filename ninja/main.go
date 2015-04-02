@@ -13,6 +13,7 @@ Usage:
 Options:
   build                     Builds a package for a driver or app, ready for distribution to the Ninja Sphere.
   --snappy-namespace=<ns>   Set the namespace for the Snappy package.
+  -v --verbose              Verbose
   -h --help                 Show this screen.
 `
 

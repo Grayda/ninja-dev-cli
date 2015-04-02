@@ -56,6 +56,9 @@ func runNativeDockerCrossCommand(dockerArgs []string, command ...string) error {
 	args = append(args, dockerArgs...)
 	args = append(args, developerCrossPackageName)
 	args = append(args, command...)
+	if verbose {
+		log.Printf("running %v\n", append([]string{"docker"}, args...))
+	}
 	cmd := exec.Command("docker", args...)
 
 	cmd.Stdout = os.Stdout
@@ -69,6 +72,9 @@ func runNativeDockerCommand(dockerArgs []string, command ...string) error {
 	args = append(args, dockerArgs...)
 	args = append(args, developerPackageName)
 	args = append(args, command...)
+	if verbose {
+		log.Printf("running %v\n", append([]string{"docker"}, args...))
+	}
 	cmd := exec.Command("docker", args...)
 
 	cmd.Stdout = os.Stdout
