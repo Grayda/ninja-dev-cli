@@ -24,5 +24,7 @@ cd $GOPATH/src/github.com/ninjasphere/driver-samsung-tv
 ninja build .
 </pre>
 
+For a more discursive description about using the Ninja Sphere Developer CLI for development, refer to the [blog](http://blog.ninjablocks.com/updates/setting-up-your-ninja-sphere-development-environment/) article on the subject.
+
 
 
