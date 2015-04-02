@@ -52,7 +52,7 @@ func isPackageInstalled(name string) bool {
 }
 
 func runNativeDockerCrossCommand(dockerArgs []string, command ...string) error {
-	args := []string{"run", "--rm", "--privileged", "-it"}
+	args := []string{"run", "--rm", "--privileged", "-i"}
 	args = append(args, dockerArgs...)
 	args = append(args, developerCrossPackageName)
 	args = append(args, command...)
@@ -68,7 +68,7 @@ func runNativeDockerCrossCommand(dockerArgs []string, command ...string) error {
 }
 
 func runNativeDockerCommand(dockerArgs []string, command ...string) error {
-	args := []string{"run", "--rm", "-it"}
+	args := []string{"run", "--rm", "-i"}
 	args = append(args, dockerArgs...)
 	args = append(args, developerPackageName)
 	args = append(args, command...)
