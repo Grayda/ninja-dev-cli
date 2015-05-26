@@ -106,17 +106,3 @@ func buildSnappyPackage(pkg *NinjaPackage, ctx *buildContext, arch string, argum
 		panic("Multi-arch snaps not supported yet, FIXME add shim wrapper here")
 	}
 }
-
-func copyAnything(from string, to string) error {
-	fromStat, err := os.Stat(from)
-	if err != nil {
-		return err
-	}
-
-	if fromStat.IsDir() {
-		return shutil.CopyTree(from, to, nil)
-	} else {
-		_, err = shutil.Copy(from, to, true)
-		return err
-	}
-}

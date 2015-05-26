@@ -12,6 +12,7 @@ import (
 type upstartTemplateVars struct {
 	PackageName string
 	TargetDir   string
+	BaseDir     string // Where should dpkg install to?
 }
 
 func buildDebianPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
@@ -19,12 +20,16 @@ func buildDebianPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
 	stagingCurr := filepath.Join(ctx.stagingHost, "debian-"+arch)
 	os.MkdirAll(stagingCurr, 0755)
 
-	targetDir := "apps"
-	if strings.HasPrefix(pkg.ShortName(), "driver-") {
+	var targetDir string
+
+	switch {
+	case (arguments["--package-type"] == "auto" && strings.HasPrefix(pkg.ShortName(), "driver-") == true) || arguments["--package-type"].(string) == "driver":
 		targetDir = "drivers"
+	case (arguments["--package-type"] == "auto" && strings.HasPrefix(pkg.ShortName(), "driver-") == false) || arguments["--package-type"].(string) == "app":
+		targetDir = "apps"
 	}
 
-	targetPath := filepath.Join(stagingCurr, "opt", "ninjablocks", targetDir, pkg.ShortName())
+	targetPath := filepath.Join(stagingCurr, deployPath, targetDir, pkg.ShortName())
 	os.MkdirAll(targetPath, 0755)
 
 	// binary itself
@@ -36,9 +41,14 @@ func buildDebianPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
 	pkgCurr := filepath.Join(targetPath, "package.json")
 	shutil.Copy(srcFile, pkgCurr, true) // don't copy symlink itself, just the real file
 
+	for _, fn := range pkg.PathsToCopy() {
+		shutil.Copy(fn, targetPath, true) // don't copy symlink itself, just the real file
+	}
+
 	tplData := &upstartTemplateVars{
 		PackageName: pkg.ShortName(),
 		TargetDir:   targetDir,
+		BaseDir:     deployPath,
 	}
 
 	// prepare /etc/init

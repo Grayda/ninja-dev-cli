@@ -15,7 +15,7 @@ env APP={{.PackageName}}
 env LOG=/var/log/{{.PackageName}}.log
 env PID=/var/run/{{.PackageName}}.pid
 
-env NINJA_APP_PATH=/opt/ninjablocks/{{.TargetDir}}/{{.PackageName}}
+env NINJA_APP_PATH={{.BaseDir}}/{{.TargetDir}}/{{.PackageName}}
 env NINJA_APP_DATA_PATH=/data/sphere/appdata/{{.TargetDir}}/{{.PackageName}}
 
 script
