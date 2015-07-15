@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/termie/go-shutil"
 	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"github.com/termie/go-shutil"
 )
 
 type upstartTemplateVars struct {
@@ -34,6 +35,7 @@ func buildDebianPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
 
 	// binary itself
 	binCurr := filepath.Join(targetPath, pkg.ShortName())
+	fmt.Println(ctx.archBinaries[arch], binCurr)
 	shutil.Copy(ctx.archBinaries[arch], binCurr, false)
 
 	// package.json
@@ -41,8 +43,17 @@ func buildDebianPackage(pkg *NinjaPackage, ctx *buildContext, arch string) {
 	pkgCurr := filepath.Join(targetPath, "package.json")
 	shutil.Copy(srcFile, pkgCurr, true) // don't copy symlink itself, just the real file
 
+	// Copy all of the files in package.json into the same dir as the binary. TO-DO: Fix this so you can copy to the binary folder, or other places like the icons folder in /data
 	for _, fn := range pkg.PathsToCopy() {
-		shutil.Copy(fn, targetPath, true) // don't copy symlink itself, just the real file
+		srcPath := filepath.Join(pkg.BasePath, fn)
+		dstPath := filepath.Join(targetPath, fn)
+		err := copyAnything(srcPath, dstPath)
+
+		if err != nil {
+			// Can't copy the files? Panic!
+			panic(err)
+		}
+
 	}
 
 	tplData := &upstartTemplateVars{

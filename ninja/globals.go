@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/termie/go-shutil"
 	"os"
+
+	"github.com/termie/go-shutil"
 )
 
 var verbose = false
